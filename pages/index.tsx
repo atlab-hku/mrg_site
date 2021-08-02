@@ -37,6 +37,7 @@ export default function Home(
       </Head>
 
       <main className={styles.main}>
+        <h1>John Margolies Photo Map</h1>
         <Map photos={selectedPhotos} />
       </main>
 
