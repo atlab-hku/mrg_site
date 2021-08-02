@@ -4,6 +4,7 @@ import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 import dynamic from 'next/dynamic';
 
+const STATIC_URL = 'https://d2sgv5kjr4yd0f.cloudfront.net';
 export default function Home() {
 
   const Map = dynamic(
