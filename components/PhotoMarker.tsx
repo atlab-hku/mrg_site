@@ -11,7 +11,6 @@ interface PMProps {
 
 const PhotoMarker: FC<PMProps> = ({photo}) => {
     const img_url: string = IMG_URL_BASE + photo.id + '.jpg';
-    const credit = photo.credit.replace('Credit line: ', '');
     const year = photo.min_year === photo.max_year ? photo.min_year.toString() : `${photo.min_year} - ${photo.max_year}`
     const popupWidth: number = 300;
     return (
@@ -32,7 +31,7 @@ const PhotoMarker: FC<PMProps> = ({photo}) => {
                     </a>
                     <p>{year}</p>
                     <p style={{fontWeight:'lighter', fontSize:'smaller'}}>
-                        Credit: {credit}
+                        Credit: {photo.credit}
                     </p>
                 </div>
             </Popup>
