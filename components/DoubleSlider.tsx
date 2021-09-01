@@ -1,4 +1,5 @@
 import React, {useState, useEffect, FC} from 'react';
+// import sliderStyles from '../styles/DoubleSlider.module.css';
 
 interface DSProps {
     min: number,
@@ -34,7 +35,7 @@ const DoubleSlider: FC<DSProps> = ({min, max}) => {
     }, [minVal, maxVal]);
     return (
         <div 
-            className="min-max-slider"
+            className="min_max_slider"
             data-legendnum="2"
             data-rangemin={min}
             data-rangemax={max}

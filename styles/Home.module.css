@@ -112,6 +112,23 @@
   margin-left: 0.5rem;
 }
 
+.controls {
+  min-height: 2rem;
+  margin: 10px 0px 10px 0px;
+}
+
+.controls label {
+  margin-right: 0.3em;
+}
+
+.controls button {
+  margin-left: 1em;
+}
+
+.controls input {
+  margin-right: 1em;
+}
+
 @media (max-width: 600px) {
   .grid {
     width: 100%;

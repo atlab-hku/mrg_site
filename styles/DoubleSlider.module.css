@@ -4,7 +4,7 @@ input[type="range"] {
     height: 0.4rem;
 }
 
-.min-max-slider > input.min {
+.min_max_slider > input.min {
     background-image: linear-gradient(
         to right,
         silver 0%
@@ -14,7 +14,7 @@ input[type="range"] {
     );
 }
 
-.min-max-slider > input.max {
+.min_max_slider > input.max {
     background-image: linear-gradient(
         to right,
         orange 0%,

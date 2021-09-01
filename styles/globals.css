@@ -14,3 +14,29 @@ a {
 * {
   box-sizing: border-box;
 }
+
+input[type="range"] {
+    --minRangePercent: 0%;
+    --maxRangePercent: 0%;
+    height: 0.4rem;
+}
+
+.min_max_slider > input.min {
+    background-image: linear-gradient(
+        to right,
+        silver 0%
+        silver var(--minRangePercent),
+        orange var(--minRangePercent),
+        orange 100%
+    );
+}
+
+.min_max_slider > input.max {
+    background-image: linear-gradient(
+        to right,
+        orange 0%,
+        orange var(--maxRangePercent),
+        silver var(--maxRangePercent),
+        silver 100%
+    );
+}
