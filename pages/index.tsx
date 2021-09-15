@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
@@ -18,8 +18,9 @@ export default function Home(
 
   const [allPhotos, setAllPhotos] = useState(locatedPhotos);
   const [selectedPhotos, setSelectedPhotos] = useState(locatedPhotos)
-  const [fromYear, setFromYear] = useState(minYear);
-  const [toYear, setToYear] = useState(maxYear);
+  const [yearStart, setYearStart] = useState(minYear)
+  const [yearEnd, setYearEnd] = useState(maxYear)
+ 
 
   const Map = React.memo(dynamic(
     () => import('../components/Map'), 
@@ -29,6 +30,36 @@ export default function Home(
     } 
   ));
   
+  function YearFilter(props: { setSelectedPhotos: (arg0: any) => void; allPhotos: any[];  yearStart: number; yearEnd: number; setYearStart: (arg0: any) => void; setYearEnd: (arg0: any)=> void;}){
+    const [fromYear, setFromYear] = useState(props.yearStart);
+    const [toYear, setToYear] = useState(props.yearEnd);
+ 
+ 
+    return (
+      <div className={styles.controls}>
+      <h2>Adjust the values below to filter the photos shown on the map</h2>
+      <label htmlFor="fromYear">From Year</label>
+      <input 
+        type="number" 
+        value={fromYear} 
+        size={6}
+        name="fromYear" onChange={(e) => { setFromYear(parseInt(e.target.value))}} />
+      <label htmlFor="toYear">To Year</label>
+      <input 
+        type="number" 
+        value={toYear} 
+        name="toYear" 
+        size={6}
+        onChange={(e) => { setToYear(parseInt(e.target.value))}} />
+      <button onClick={() => {props.setSelectedPhotos(props.allPhotos.filter((p: { min_year: number; max_year: number; }) => (p.min_year >= fromYear && p.max_year <= toYear)))
+    ;
+    props.setYearStart(fromYear);
+    props.setYearEnd(toYear);
+    }}>Filter</button>
+    </div>
+    )
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -42,23 +73,7 @@ export default function Home(
         <p>
           The photographs below were taken by photographer John Margolies between {minYear} and {maxYear}
         </p>
-        <div className={styles.controls}>
-          <h2>Adjust the values below to filter the photos shown on the map</h2>
-          <label htmlFor="fromYear">From Year</label>
-          <input 
-            type="number" 
-            value={fromYear} 
-            size={6}
-            name="fromYear" onChange={(e) => (setFromYear(parseInt(e.target.value)))} />
-          <label htmlFor="toYear">To Year</label>
-          <input 
-            type="number" 
-            value={toYear} 
-            name="toYear" 
-            size={6}
-            onChange={(e) => (setToYear(parseInt(e.target.value)))} />
-          <button onClick={() => setSelectedPhotos(allPhotos.filter(p => (p.min_year >= fromYear && p.max_year <= toYear)))}>Filter</button>
-        </div>
+       <YearFilter allPhotos={allPhotos} setSelectedPhotos={setSelectedPhotos} yearStart={yearStart} setYearStart={setYearStart} yearEnd ={yearEnd} setYearEnd ={setYearEnd}></YearFilter>
         <Map photos={selectedPhotos} />
       </main>
 
