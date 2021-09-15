@@ -1,6 +1,6 @@
 import { LatLngTuple } from 'leaflet';
 import { FC } from 'react';
-import { Marker, Popup } from "react-leaflet";
+import { CircleMarker, Popup } from "react-leaflet";
 import Image from 'next/image';
 import { Photo } from '../lib/types';
 import { IMG_URL_BASE } from '../lib/util';
@@ -14,7 +14,7 @@ const PhotoMarker: FC<PMProps> = ({photo}) => {
     const year = photo.min_year === photo.max_year ? photo.min_year.toString() : `${photo.min_year} - ${photo.max_year}`
     const popupWidth: number = 300;
     return (
-        <Marker position={[photo.latitude, photo.longitude]}>
+        <CircleMarker center={[photo.latitude, photo.longitude]}>
             <Popup>
                 <div style={{maxWidth: popupWidth}}>
                     <h3>{photo.title}</h3>
@@ -36,7 +36,7 @@ const PhotoMarker: FC<PMProps> = ({photo}) => {
                 </div>
             </Popup>
             
-        </Marker>
+        </CircleMarker>
     )
 }
 export default PhotoMarker;
