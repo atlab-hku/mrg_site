@@ -7,29 +7,35 @@ import { IMG_URL_BASE } from '../lib/util';
 
 interface PMProps {
     photo: Photo,
-    markerLanlngToPixel: any
+    getLocation: any,
+ 
 }
 
-const PhotoMarker: FC<PMProps> = ({photo,markerLanlngToPixel}) => {
+const PhotoMarker: FC<PMProps> = ({photo,getLocation }) => {
     const img_url: string = IMG_URL_BASE + photo.id + '.jpg';
-    const year = photo.min_year === photo.max_year ? photo.min_year.toString() : `${photo.min_year} - ${photo.max_year}`
+    const year = photo.min_year === photo.max_year ? photo.min_year.toString() : `${photo.min_year} - ${photo.max_year}`;
     const popupWidth: number = 300;
-     //We must update it whenever we zoom
-    function Fire(){
-        setPixellocation(markerLanlngToPixel([photo.latitude, photo.longitude]));
-        return null;
-    }
-    const [pixelLocation, setPixellocation] = useState(markerLanlngToPixel([photo.latitude, photo.longitude]));
-    return (
+
+     
+    let offset = [0,0];
+    const[notused , forceRerender] = useState("");
+      return (
         <CircleMarker  center={[photo.latitude, photo.longitude]}
         eventHandlers={{
             click: (e) => {
-                setPixellocation(markerLanlngToPixel([photo.latitude, photo.longitude]))
+                //Get current pixel location.
+                let currentLocation = (getLocation([photo.latitude, photo.longitude]));
+                offset[0] = 180 - currentLocation[0] ;
+                offset[1] = 600 - currentLocation[1] ;               
+                forceRerender(Date());
+                //This is used to initate a state change to force rerendering when the marker is clicked, so that the
+                //computation of the appropriate offset value will be set to the Popup
+                
             },
           }}
         >
             
-            <Popup   offset={[400-pixelLocation.x,600 - pixelLocation.y]}  autoPan={false} >
+            <Popup  offset={offset} autoPan={false}    >
         
                 <div style={{maxWidth: popupWidth}}>
                     <h3>{photo.title}</h3>

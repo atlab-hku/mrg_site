@@ -16,25 +16,20 @@ interface MapProps {
 const Map: FC<MapProps> = ({ photos  }) => {
     const startPosition : LatLngTuple = [37.09024, -95.712891];
     let map:any = null;
-
-   
-        function markerLanlngToPixel(lanlng){
-            return map.latLngToContainerPoint(lanlng);
+    function SetMapObject() {
+        map = useMap()  
+        return null;
+      }
+   //Temporary solution to allow the marker to use function to access the map object
+        function getLocation(lanlng){
+            let pixelLocation = map.latLngToContainerPoint(lanlng)
+             return [pixelLocation.x , pixelLocation.y];
         }
-        function SetMapObject() {
-             map = useMap()
-            
-                    setInterval(()=>{
-                        console.log(map.getCenter())
-                        console.log(map.latLngToContainerPoint(map.getCenter()))//**** */
-               
-                    },1112000)
-                   
-             return null;
-           }
+    
+
            const markers = useMemo(() =>
            photos.map(
-           (p: Photo) => (<PhotoMarker markerLanlngToPixel={markerLanlngToPixel} key={p.id} photo={p} />)),
+           (p: Photo) => (<PhotoMarker   getLocation={getLocation} key={p.id} photo={p} />)),
            [photos]);
     return (
         <MapContainer center={startPosition} zoom={4} scrollWheelZoom={true} 
