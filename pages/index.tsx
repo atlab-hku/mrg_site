@@ -6,7 +6,7 @@ import styles from '../styles/Home.module.css';
 import dynamic from 'next/dynamic';
 import { Photo } from '../lib/types';
 import Slider from '@mui/material/Slider';
-
+import Stack from '@mui/material/Stack';
 const STATIC_URL = 'https://d2sgv5kjr4yd0f.cloudfront.net';
 export default function Home(
   { locatedPhotos,  minYear,  maxYear}: {
@@ -31,31 +31,33 @@ export default function Home(
   ));
   
   function YearFilter(){
- 
     const [value, setValue] = React.useState([yearStart, yearEnd]);
-
     const handleChange = (event: any, newValue: React.SetStateAction<number[]>) => {
       setValue(newValue);
     };
     return (
       <div className={styles.controls}>
-
-<Slider
-  sx={{
-    width: 600,
-    color: 'success.main',
-  }}    min= {minYear}
-        max= {maxYear}
-        getAriaLabel={() => 'Temperature range'}
-        value={value}
-        onChange={handleChange}
-        valueLabelDisplay="on"
-       />
-      <button onClick={() => {setSelectedPhotos(allPhotos.filter((p: { min_year: number; max_year: number; }) => (p.min_year >= value[0] && p.max_year <= value[1])))
-    ;
-     setYearStart(value[0]);
-     setYearEnd(value[1]);
-    }}>Filter</button>
+        <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
+          <div> Min: {minYear} </div>
+            <Slider
+              sx={{
+                width: 600,
+                color: 'success.main',
+              }}    
+              min= {minYear}
+              max= {maxYear}
+              getAriaLabel={() => 'Years range'}
+              value={value}
+              onChange={handleChange}
+              valueLabelDisplay="on"
+            />
+          <div> Max: {maxYear} </div>
+          <button onClick={() => {
+            setSelectedPhotos(allPhotos.filter((p: { min_year: number; max_year: number; }) => (p.min_year >= value[0] && p.max_year <= value[1])));
+            setYearStart(value[0]);
+            setYearEnd(value[1]);
+          }}>Filter</button>
+        </Stack>
     </div>
     )
   }
