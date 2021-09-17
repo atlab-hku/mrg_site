@@ -49,7 +49,7 @@ export default function Home(
         getAriaLabel={() => 'Temperature range'}
         value={value}
         onChange={handleChange}
-        valueLabelDisplay="auto"
+        valueLabelDisplay="on"
        />
       <button onClick={() => {setSelectedPhotos(allPhotos.filter((p: { min_year: number; max_year: number; }) => (p.min_year >= value[0] && p.max_year <= value[1])))
     ;
