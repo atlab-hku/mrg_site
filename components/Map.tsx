@@ -10,28 +10,25 @@ import  { Photo } from '../lib/types';
 import PhotoMarker from './PhotoMarker';
 
 interface MapProps {
-    photos: Photo[]
+    photos: Photo[],
+    photoViewRef: any
+   
 }
 
-const Map: FC<MapProps> = ({ photos  }) => {
+const Map: FC<MapProps> = ({ photos ,photoViewRef }) => {
+ 
     const startPosition : LatLngTuple = [37.09024, -95.712891];
     let map:any = null;
     function SetMapObject() {
         map = useMap()  
         return null;
       }
-   //Temporary solution to allow the marker to use function to access the map object
-        function getLocation(lanlng){
-            let pixelLocation = map.latLngToContainerPoint(lanlng)
-             return [pixelLocation.x , pixelLocation.y];
-        }
-    
 
            const markers = useMemo(() =>
            photos.map(
-           (p: Photo) => (<PhotoMarker   getLocation={getLocation} key={p.id} photo={p} />)),
+           (p: Photo) => (<PhotoMarker photoViewRef={photoViewRef}  key={p.id} photo={p} />)),
            [photos]);
-    return (
+     return (
         <MapContainer center={startPosition} zoom={4} scrollWheelZoom={true} 
                     style={{height:600, width:800, borderRadius:"2em"}}>
             <TileLayer
