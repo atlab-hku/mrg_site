@@ -5,7 +5,7 @@ import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 import dynamic from 'next/dynamic';
 import { Photo } from '../lib/types';
-import DoubleSlider from '../components/DoubleSlider';
+import Slider from '@mui/material/Slider';
 
 const STATIC_URL = 'https://d2sgv5kjr4yd0f.cloudfront.net';
 export default function Home(
@@ -30,36 +30,36 @@ export default function Home(
     } 
   ));
   
-  function YearFilter(props: { setSelectedPhotos: (arg0: any) => void; allPhotos: any[];  yearStart: number; yearEnd: number; setYearStart: (arg0: any) => void; setYearEnd: (arg0: any)=> void;}){
-    const [fromYear, setFromYear] = useState(props.yearStart);
-    const [toYear, setToYear] = useState(props.yearEnd);
+  function YearFilter(){
  
- 
+    const [value, setValue] = React.useState([yearStart, yearEnd]);
+
+    const handleChange = (event: any, newValue: React.SetStateAction<number[]>) => {
+      setValue(newValue);
+    };
     return (
       <div className={styles.controls}>
-      <h2>Adjust the values below to filter the photos shown on the map</h2>
-      <label htmlFor="fromYear">From Year</label>
-      <input 
-        type="number" 
-        value={fromYear} 
-        size={6}
-        name="fromYear" onChange={(e) => { setFromYear(parseInt(e.target.value))}} />
-      <label htmlFor="toYear">To Year</label>
-      <input 
-        type="number" 
-        value={toYear} 
-        name="toYear" 
-        size={6}
-        onChange={(e) => { setToYear(parseInt(e.target.value))}} />
-      <button onClick={() => {props.setSelectedPhotos(props.allPhotos.filter((p: { min_year: number; max_year: number; }) => (p.min_year >= fromYear && p.max_year <= toYear)))
+
+<Slider
+  sx={{
+    width: 600,
+    color: 'success.main',
+  }}    min= {minYear}
+        max= {maxYear}
+        getAriaLabel={() => 'Temperature range'}
+        value={value}
+        onChange={handleChange}
+        valueLabelDisplay="auto"
+       />
+      <button onClick={() => {setSelectedPhotos(allPhotos.filter((p: { min_year: number; max_year: number; }) => (p.min_year >= value[0] && p.max_year <= value[1])))
     ;
-    props.setYearStart(fromYear);
-    props.setYearEnd(toYear);
+     setYearStart(value[0]);
+     setYearEnd(value[1]);
     }}>Filter</button>
     </div>
     )
   }
-
+ 
   return (
     <div className={styles.container}>
       <Head>
@@ -73,7 +73,8 @@ export default function Home(
         <p>
           The photographs below were taken by photographer John Margolies between {minYear} and {maxYear}
         </p>
-       <YearFilter allPhotos={allPhotos} setSelectedPhotos={setSelectedPhotos} yearStart={yearStart} setYearStart={setYearStart} yearEnd ={yearEnd} setYearEnd ={setYearEnd}></YearFilter>
+       <YearFilter></YearFilter>
+   
         <Map photos={selectedPhotos} />
       </main>
 
