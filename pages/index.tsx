@@ -8,6 +8,70 @@ import { Photo } from '../lib/types';
 import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
 const STATIC_URL = 'https://d2sgv5kjr4yd0f.cloudfront.net';
+
+import Box from "@mui/material/Box";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import Chip from "@mui/material/Chip";
+
+const names = [
+  "Oliver Hansen",
+  "Van Henry",
+  "April Tucker",
+  "Ralph Hubbard",
+  "Omar Alexander",
+  "Carlos Abbott",
+  "Miriam Wagner",
+  "Bradley Wilkerson",
+  "Virginia Andrews",
+  "Kelly Snyder"
+];
+function MultipleSelectChip() {
+  const [personName, setPersonName] = React.useState([]);
+
+  const handleChange = (event) => {
+    const {
+      target: { value }
+    } = event;
+    setPersonName(
+      // On autofill we get a the stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
+  return (
+    <div>
+      <FormControl sx={{ m: 1, width: 1000 }}>
+        <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
+        <Select
+          labelId="demo-multiple-chip-label"
+          id="demo-multiple-chip"
+          multiple
+          value={personName}
+          onChange={handleChange}
+          input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+          renderValue={(selected) => (
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+              {selected.map((value) => (
+                <Chip key={value} label={value} />
+              ))}
+            </Box>
+          )}
+        >
+          {names.map((name) => (
+            <MenuItem key={name} value={name}>
+              {name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </div>
+  );
+}
+
 export default function Home(
   { locatedPhotos,  minYear,  maxYear}: {
     locatedPhotos: Photo[],
@@ -21,7 +85,9 @@ export default function Home(
   const [selectedPhotos, setSelectedPhotos] = useState(locatedPhotos)
   const [yearStart, setYearStart] = useState(minYear)
   const [yearEnd, setYearEnd] = useState(maxYear)
-    
+  let obj = require('../data/keywords.json');
+    console.log(Object.keys(obj).length
+    )
   const Map = React.memo(dynamic(
     () => import('../components/Map'), 
     { 
@@ -58,6 +124,7 @@ export default function Home(
             setYearEnd(value[1]);
           }}>Filter</button>
         </Stack>
+        
     </div>
     )
   }
@@ -99,9 +166,12 @@ export default function Home(
           The photographs below were taken by photographer John Margolies between {minYear} and {maxYear}
         </p>
        <YearFilter></YearFilter>
+       <MultipleSelectChip></MultipleSelectChip>
+
       <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
       <Map  photoViewRef={photoViewRef} photos={selectedPhotos} />
       <PhotoView ref={photoViewRef}></PhotoView>
+      
          </Stack>
       </main>
 
