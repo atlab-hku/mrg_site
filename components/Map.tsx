@@ -19,14 +19,14 @@ const Map: FC<MapProps> = ({ photos ,photoViewRef }) => {
  
     const startPosition : LatLngTuple = [37.09024, -95.712891];
     let map:any = null;
-    function SetMapObject() {
-        map = useMap()  
-        return null;
-      }
-
+    let markerController = Object();
+    markerController.changeLastMarkerColorToDefault = function(){
+    }
+    
+   
            const markers = useMemo(() =>
            photos.map(
-           (p: Photo) => (<PhotoMarker photoViewRef={photoViewRef}  key={p.id} photo={p} />)),
+           (p: Photo) => (<PhotoMarker markerController={markerController} photos={photos}  photoViewRef={photoViewRef}  key={p.id} photo={p} />)),
            [photos]);
      return (
         <MapContainer center={startPosition} zoom={4} scrollWheelZoom={true} 
@@ -35,8 +35,7 @@ const Map: FC<MapProps> = ({ photos ,photoViewRef }) => {
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-               <SetMapObject />
-            {markers}
+             {markers}
         </MapContainer>
     )
 }
