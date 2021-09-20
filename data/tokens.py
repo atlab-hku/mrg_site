@@ -95,6 +95,7 @@ def combine_selected(by_tokens):
         ],
         "miniature golf"
     )
+
     return res
 
 def load_final():
@@ -103,3 +104,11 @@ def load_final():
     selected = filter_selected(by_tokens)
     combined = combine_selected(selected)
     return combined
+
+def save_tokens(by_tokens):
+    with open("final_tokens.txt", "w") as token_file:
+        token_file.write("\n".join(sorted(by_tokens.keys())))
+    
+    with open("keywords.json", "w") as keyword_file:
+        keyword_file.write(json.dumps(by_tokens))
+
