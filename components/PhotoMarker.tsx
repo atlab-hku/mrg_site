@@ -17,26 +17,20 @@ function createInfoHtml(photo: any){
     const year = photo.min_year === photo.max_year ? photo.min_year.toString() : `${photo.min_year} - ${photo.max_year}`;
     let photoInfoHtml = 
     (
-        <div style={{maxWidth: 300}}>
-            <h3>{photo.title}</h3>
-            <a href={img_url} target="_blank" rel="noreferrer">
-                <Image 
+         
+            <><h3>{photo.title}</h3><a href={img_url} target="_blank" rel="noreferrer">
+                <Image
                     key={img_url}
-                    src={img_url} 
+                    src={img_url}
                     width={300}
                     height={300}
                     alt={photo.title}
                     title={photo.title}
-                    objectFit="scale-down"
-
-                />
-            </a>
-            <p>{year}</p>
-            <p style={{fontWeight:'lighter', fontSize:'smaller'}}>
-                Credit: {photo.credit}
-            </p>
-        </div>
-    );
+                    objectFit="scale-down" />
+            </a><p>{year}</p><p style={{ fontWeight: 'lighter', fontSize: 'smaller' }}>
+                    Credit: {photo.credit}
+                </p></>
+     );
     return photoInfoHtml;
 }
 function getSimilarphotos(photos: any, photo: any){

@@ -7,70 +7,47 @@ import dynamic from 'next/dynamic';
 import { Photo } from '../lib/types';
 import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
-const STATIC_URL = 'https://d2sgv5kjr4yd0f.cloudfront.net';
+import Checkbox from '@mui/material/Checkbox';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
-import Box from "@mui/material/Box";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import Chip from "@mui/material/Chip";
+let keywordsObject = require('../data/keywords.json');
+const keywords = Object.keys(keywordsObject);
+let selectedKeywords: string | any[] = []
 
-const names = [
-  "Oliver Hansen",
-  "Van Henry",
-  "April Tucker",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder"
-];
-function MultipleSelectChip() {
-  const [personName, setPersonName] = React.useState([]);
-
-  const handleChange = (event) => {
-    const {
-      target: { value }
-    } = event;
-    setPersonName(
-      // On autofill we get a the stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
-
+function CheckboxesTags() {
   return (
-    <div>
-      <FormControl sx={{ m: 1, width: 1000 }}>
-        <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
-        <Select
-          labelId="demo-multiple-chip-label"
-          id="demo-multiple-chip"
-          multiple
-          value={personName}
-          onChange={handleChange}
-          input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-          renderValue={(selected) => (
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-              {selected.map((value) => (
-                <Chip key={value} label={value} />
-              ))}
-            </Box>
-          )}
-        >
-          {names.map((name) => (
-            <MenuItem key={name} value={name}>
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </div>
+    <Autocomplete
+    className={styles.controls}
+      multiple
+      id="checkboxes-tags-demo"
+      options={keywords}
+      disableCloseOnSelect
+      onChange={(event, newValue) => {
+        selectedKeywords = newValue
+      }}
+      getOptionLabel={(option) => option}
+      renderOption={(props, option, { selected }) => (
+        <li {...props}>
+          <Checkbox
+            icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+            checkedIcon={<CheckBoxIcon fontSize="small" />}
+            style={{ marginRight: 8 }}
+            checked={selected}
+          />
+          {option}
+        </li>
+      )}
+      style={{ width: 1100 }}
+      renderInput={(params) => (
+        <TextField {...params} label="Keywords" placeholder="Keywords" />
+      )}
+    />
   );
 }
+
 
 export default function Home(
   { locatedPhotos,  minYear,  maxYear}: {
@@ -85,9 +62,7 @@ export default function Home(
   const [selectedPhotos, setSelectedPhotos] = useState(locatedPhotos)
   const [yearStart, setYearStart] = useState(minYear)
   const [yearEnd, setYearEnd] = useState(maxYear)
-  let obj = require('../data/keywords.json');
-    console.log(Object.keys(obj).length
-    )
+
   const Map = React.memo(dynamic(
     () => import('../components/Map'), 
     { 
@@ -101,6 +76,30 @@ export default function Home(
     const handleChange = (event: any, newValue: React.SetStateAction<number[]>) => {
       setValue(newValue);
     };
+
+    function filterFunction(p: { min_year: number; max_year: number; id: any; }){
+       //Used an array to get all the id associated with the chosen keywords 
+      let id_array: any[] = []
+      for(let i = 0; i < selectedKeywords.length; i ++){
+        id_array = id_array.concat(keywordsObject[selectedKeywords[i]])
+
+      }
+      //We don't have to use keywords to filter if there are no keywords chosen
+      if (id_array.length === 0) {
+          return (p.min_year >= value[0] && p.max_year <= value[1])
+      }
+      //We filter those photo whose id is included in those ids associated with the chosen keywords
+      let included = false
+       for (let i = 0; i < id_array.length; i++){
+          if(p.id ==id_array[i] ){
+            included = true
+          break;
+          }
+          
+       }
+       
+       return (p.min_year >= value[0] && p.max_year <= value[1]) && included == true
+    }
     return (
       <div className={styles.controls}>
         <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
@@ -119,7 +118,13 @@ export default function Home(
             />
           <div> Max: {maxYear} </div>
           <button onClick={() => {
-            setSelectedPhotos(allPhotos.filter((p: { min_year: number; max_year: number; }) => (p.min_year >= value[0] && p.max_year <= value[1])));
+            let filteringResult = allPhotos.filter(filterFunction)
+            if(filteringResult.length ==0){
+                  alert("No photos match the given search criteria")
+                 
+            
+            }
+            setSelectedPhotos(filteringResult);
             setYearStart(value[0]);
             setYearEnd(value[1]);
           }}>Filter</button>
@@ -134,17 +139,19 @@ export default function Home(
     // The component instance will be extended
     // with whatever you return from the callback passed
     // as the second argument
-    const [innerHtml, setInnerHtml] = useState( <div style={{maxWidth: 300}}>
-      <h3>Click on a marker to view the photo at that location</h3>
-       
-  </div>)
-    useImperativeHandle(ref, () => ({
+    const [innerHtml, setInnerHtml] = useState( <h3>Click on a marker to view the photo at that location</h3>)
+     useImperativeHandle(ref, () => ({
       setPhotoInfo(value) {
+        
         setInnerHtml(value)
-      }
+       }
     }));
     return(
-      innerHtml
+      <div style={{maxWidth: 300}}>
+     
+      {innerHtml}
+       
+     </div>
      
     )
   });
@@ -166,7 +173,7 @@ export default function Home(
           The photographs below were taken by photographer John Margolies between {minYear} and {maxYear}
         </p>
        <YearFilter></YearFilter>
-       <MultipleSelectChip></MultipleSelectChip>
+ <CheckboxesTags></CheckboxesTags>
 
       <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
       <Map  photoViewRef={photoViewRef} photos={selectedPhotos} />
