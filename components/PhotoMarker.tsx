@@ -41,10 +41,10 @@ function getSimilarphotos(photos: any, photo: any){
         }
     }
     
-   let sortedPhotos =  photosWithSameLanLng.sort( (a,b) => Number(a.min_year - b.min_year))
+   let sortedPhotos =  photosWithSameLanLng.sort( (a: Photo,b: Photo) => Number(a.min_year - b.min_year))
     return sortedPhotos
 }
-function getYear(photo){
+function getYear(photo: Photo){
     return photo.min_year === photo.max_year ? photo.min_year.toString() : `${photo.min_year} - ${photo.max_year}`
 }
 const PhotoMarker: FC<PMProps> = ({photo,photoViewRef,markerController,photos }) => {
@@ -70,7 +70,7 @@ const PhotoMarker: FC<PMProps> = ({photo,photoViewRef,markerController,photos })
              
             eventHandlers={{
                 click: (e) => {
-                    let photoList = getSimilarphotos(photos,photo).map((p: Photo, index)=>(<div key={p.id}><Button  style={{textTransform: 'none'}} size="small" variant="outlined" onClick={()=>{
+                    let photoList = getSimilarphotos(photos,photo).map((p: Photo, index: number)=>(<div key={p.id}><Button  style={{textTransform: 'none'}} size="small" variant="outlined" onClick={()=>{
                    
                         photoViewRef.current.setPhotoInfo(createInfoHtml(p))
     
@@ -80,7 +80,7 @@ const PhotoMarker: FC<PMProps> = ({photo,photoViewRef,markerController,photos })
                    
                     setColor("#FF00FF");
                     setFillColor("#FF00FF")
-                    setFillOpacity("0.8")
+                    setFillOpacity(0.2)
                     markerController.changeLastMarkerColorToDefault();
                     markerController.changeLastMarkerColorToDefault = resetColor
                     photoViewRef.current.setPhotoInfo(createInfoHtml(photo))
