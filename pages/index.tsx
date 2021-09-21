@@ -191,6 +191,7 @@ export default function Home(
 
 export async function getStaticProps() {
   const photos: Photo[] = require('../data/photos.json');
+ 
   const locatedPhotos: Photo[] =  photos.filter((p: Photo) => p.latitude !== null && p.longitude !== null);
   const minYear: number = Math.min(...locatedPhotos.map((p: Photo) => p.min_year));
   const maxYear: number = Math.max(...locatedPhotos.map((p: Photo) => p.max_year));

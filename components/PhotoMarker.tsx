@@ -40,9 +40,13 @@ function getSimilarphotos(photos: any, photo: any){
             photosWithSameLanLng.push(photos[i])
         }
     }
-    return photosWithSameLanLng
+    
+   let sortedPhotos =  photosWithSameLanLng.sort( (a,b) => Number(a.min_year - b.min_year))
+    return sortedPhotos
 }
-   
+function getYear(photo){
+    return photo.min_year === photo.max_year ? photo.min_year.toString() : `${photo.min_year} - ${photo.max_year}`
+}
 const PhotoMarker: FC<PMProps> = ({photo,photoViewRef,markerController,photos }) => {
 
     const [color, setColor] = useState('#3388ff')
@@ -66,11 +70,13 @@ const PhotoMarker: FC<PMProps> = ({photo,photoViewRef,markerController,photos })
              
             eventHandlers={{
                 click: (e) => {
-                  setSimilarPhotos(getSimilarphotos(photos,photo).map((p: Photo)=>(<div key={p.id}><Button onClick={()=>{
+                    let photoList = getSimilarphotos(photos,photo).map((p: Photo, index)=>(<div key={p.id}><Button  style={{textTransform: 'none'}} size="small" variant="outlined" onClick={()=>{
                    
-                    photoViewRef.current.setPhotoInfo(createInfoHtml(p))
-
-                 }}>{p.title}</Button></div>)))
+                        photoViewRef.current.setPhotoInfo(createInfoHtml(p))
+    
+                     }}>{index+1}. {p.title} {"\n"} {getYear(p)}</Button></div>))
+                     
+                  setSimilarPhotos(photoList)
                    
                     setColor("#FF00FF");
                     setFillColor("#FF00FF")
