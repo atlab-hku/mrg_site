@@ -2,8 +2,8 @@ import { FC, useState} from 'react';
 import Button from '@mui/material/Button';
 import { CircleMarker, Popup } from "react-leaflet";
 import Image from 'next/image';
-import { Photo, MarkerController } from '../lib/types';
-import { IMG_URL_BASE } from '../lib/util';
+import { Photo, MarkerController } from '../../lib/types';
+import { IMG_URL_BASE } from '../../lib/util';
 
 interface PMProps {
     photo: Photo,
@@ -15,12 +15,15 @@ interface PMProps {
 function createInfoHtml(photo: Photo){
     const img_url: string = IMG_URL_BASE + photo.id + '.jpg';
     const year = photo.min_year === photo.max_year ? photo.min_year.toString() : `${photo.min_year} - ${photo.max_year}`;
+   
     let photoInfoHtml = 
     (         
             <>
                 <h3>{photo.title}</h3>
-                <a href={img_url} target="_blank" rel="noreferrer">
+                <a href={img_url} >
                     <Image
+                    priority={true }
+                    loading="eager"
                     key={img_url}
                     src={img_url}
                     width={300}
@@ -28,6 +31,7 @@ function createInfoHtml(photo: Photo){
                     alt={photo.title}
                     title={photo.title}
                     objectFit="scale-down" />
+               
                 </a>
                 <p> {year} </p>
                 <p style={{ fontWeight: 'lighter', fontSize: 'smaller' }}>

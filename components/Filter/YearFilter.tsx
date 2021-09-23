@@ -1,15 +1,13 @@
 /* eslint-disable react/display-name */
-import React, {   } from 'react';
+import React, { useState } from 'react';
 import styles from '../../styles/Home.module.css';
 import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
 
-let keywordsObject = require('../../data/keywords.json');
-
- 
- 
 export default function YearFilter(props: any){
-    const [value, setValue] = React.useState< number[]>([props.yearStart, props.yearEnd]);
+    const [yearStart, setYearStart] = useState(props.minYear)
+    const [yearEnd, setYearEnd] = useState(props.maxYear)
+    const [value, setValue] = React.useState< number[]>([yearStart, yearEnd]);
     const handleChange = (event: Event, value:  any) => {
       setValue(value);
     };
@@ -18,7 +16,7 @@ export default function YearFilter(props: any){
        //Used an array to get all the id associated with the chosen keywords 
       let id_array: String[] = []
       for(let i = 0; i < props.selectedKeywords.length; i ++){
-        id_array = id_array.concat(keywordsObject[props.selectedKeywords[i]])
+        id_array = id_array.concat(props.keywordsObject[props.selectedKeywords[i]])
 
       }
       //We don't have to use keywords to filter if there are no keywords chosen
@@ -61,8 +59,8 @@ export default function YearFilter(props: any){
             
             }
             props.setSelectedPhotos(filteringResult);
-            props.setYearStart(value[0]);
-            props.setYearEnd(value[1]);
+            setYearStart(value[0]);
+            setYearEnd(value[1]);
           }}>Filter</button>
         </Stack>
         

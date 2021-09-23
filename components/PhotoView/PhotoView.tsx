@@ -11,6 +11,7 @@ export const PhotoView = forwardRef((props, ref) => {
     useImperativeHandle(ref, () => ({
       setPhotoInfo(value: any) {
         setInnerHtml(value)
+        console.log(Date())
        }
     }));
     return(
