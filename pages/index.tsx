@@ -6,57 +6,20 @@ import dynamic from 'next/dynamic';
 import { Photo } from '../lib/types';
 import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
-import Checkbox from '@mui/material/Checkbox';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-
+import  KeywordsSelect  from '../components/Filter/KeywordSelect'; 
 let keywordsObject = require('../data/keywords.json');
 const keywords = Object.keys(keywordsObject);
 let selectedKeywords: string [] = []
-
-function CheckboxesTags() {
-  return (
-    <Autocomplete
-    className={styles.controls}
-      multiple
-      id="checkboxes-tags-demo"
-      options={keywords}
-      disableCloseOnSelect
-      onChange={(event, newValue) => {
-        selectedKeywords = newValue
-      }}
-      getOptionLabel={(option) => option}
-      renderOption={(props, option, { selected }) => (
-        <li {...props}>
-          <Checkbox
-            icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-            checkedIcon={<CheckBoxIcon fontSize="small" />}
-            style={{ marginRight: 8 }}
-            checked={selected}
-          />
-          {option}
-        </li>
-      )}
-      style={{ width: 1100 }}
-      renderInput={(params) => (
-        <TextField {...params} label="Keywords" placeholder="Keywords" />
-      )}
-    />
-  );
+function changeSelectedKeywords(value: any){
+  selectedKeywords = value
 }
 
 
-export default function Home(
-  { locatedPhotos,  minYear,  maxYear}: {
-    locatedPhotos: Photo[],
-    minYear: number,
-    maxYear: number
-  }
-  ) {
-     
-   
+export default function Home({ locatedPhotos,  minYear,  maxYear}: {
+      locatedPhotos: Photo[],
+      minYear: number,
+      maxYear: number
+  }){
   const [allPhotos, setAllPhotos] = useState(locatedPhotos);
   const [selectedPhotos, setSelectedPhotos] = useState(locatedPhotos)
   const [yearStart, setYearStart] = useState(minYear)
@@ -171,7 +134,7 @@ export default function Home(
           The photographs below were taken by photographer John Margolies between {minYear} and {maxYear}
         </p>
        <YearFilter></YearFilter>
- <CheckboxesTags></CheckboxesTags>
+ <KeywordsSelect  keywords={keywords} changeSelectedKeywords={changeSelectedKeywords}></KeywordsSelect>
 
       <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
       <Map  photoViewRef={photoViewRef} photos={selectedPhotos} />
