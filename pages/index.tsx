@@ -7,13 +7,16 @@ import { Photo } from '../lib/types';
 import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
 import  KeywordsSelect  from '../components/Filter/KeywordSelect'; 
+import  {PhotoView}  from '../components/PhotoView'; 
+
 let keywordsObject = require('../data/keywords.json');
+
+ 
 const keywords = Object.keys(keywordsObject);
 let selectedKeywords: string [] = []
 function changeSelectedKeywords(value: any){
   selectedKeywords = value
 }
-
 
 export default function Home({ locatedPhotos,  minYear,  maxYear}: {
       locatedPhotos: Photo[],
@@ -94,28 +97,7 @@ export default function Home({ locatedPhotos,  minYear,  maxYear}: {
     </div>
     )
   }
-
-  const PhotoView = forwardRef((props, ref) => {
-
-    // The component instance will be extended
-    // with whatever you return from the callback passed
-    // as the second argument
-    const [innerHtml, setInnerHtml] = useState( <h3>Click on a marker to view the photo at that location</h3>)
-     useImperativeHandle(ref, () => ({
-      setPhotoInfo(value: any) {
-        
-        setInnerHtml(value)
-       }
-    }));
-    return(
-      <div style={{maxWidth: 300}}>
-     
-      {innerHtml}
-       
-     </div>
-     
-    )
-  });
+ 
   
   const photoViewRef = useRef();
  
