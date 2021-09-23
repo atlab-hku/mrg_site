@@ -8,7 +8,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
- export default function KeywordsSelect(props: { keywords: readonly unknown[]; changeSelectedKeywords: (arg0: unknown[]) => void; }) {
+ export default function KeywordsSelect(props: any) {
       
     return (
       <Autocomplete
@@ -20,7 +20,6 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
         onChange={(event, newValue) => {
             props.changeSelectedKeywords(newValue)
         }}
-        getOptionLabel={(option) => option}
         renderOption={(props, option, { selected }) => (
           <li {...props}>
             <Checkbox
