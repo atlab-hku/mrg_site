@@ -1,34 +1,42 @@
-import { FC, useMemo, useEffect } from 'react';
-import { MapContainer, Marker, Popup, TileLayer,useMap } from 'react-leaflet'
+import { FC, useState, useMemo, useEffect } from 'react';
+import { MapContainer, TileLayer, } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css'; // Re-uses images from ~leaflet package
-import * as L from 'leaflet';
 import 'leaflet-defaulticon-compatibility';
-
 import { LatLngTuple } from 'leaflet';
-import  { Photo } from '../lib/types';
+import  { Photo ,MarkerController } from '../lib/types';
 import PhotoMarker from './PhotoMarker';
 
 interface MapProps {
     photos: Photo[],
     photoViewRef: any
-   
+    
 }
 
 const Map: FC<MapProps> = ({ photos ,photoViewRef }) => {
- 
     const startPosition : LatLngTuple = [37.09024, -95.712891];
-    let map:any = null;
-    let markerController = Object();
-    markerController.changeLastMarkerColorToDefault = function(){
-    }
-    
-   
-           const markers = useMemo(() =>
-           photos.map(
-           (p: Photo) => (<PhotoMarker markerController={markerController} photos={photos}  photoViewRef={photoViewRef}  key={p.id} photo={p} />)),
-           [photos]);
-           
+    const [markerController, setMarkerController] = useState(Object())
+    const [markers, setMarkers] = useState(useMemo(
+
+    //Trying to use usestate and useeffect to only compute the values on the inital render. 
+        () => photos.map(
+                (p: Photo) => 
+                (<PhotoMarker 
+                    markerController={markerController} 
+                    photos={photos}  
+                    photoViewRef={photoViewRef}  
+                    key={p.id} 
+                    photo={p} />
+                )
+            ),
+            [markerController, photoViewRef, photos]
+        ))
+    useEffect(() => {
+        markerController.changeLastMarkerColorToDefault = function(){
+            //A dummy function. Later it will be replaced by another marker's own function for reverting its' own color
+        }
+      }, [markerController]);
+
      return (
         <MapContainer center={startPosition} zoom={4} scrollWheelZoom={true} 
                     style={{height:600, width:800, borderRadius:"2em"}}>

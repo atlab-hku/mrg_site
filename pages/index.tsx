@@ -1,7 +1,6 @@
 /* eslint-disable react/display-name */
-import React, { useEffect, useState,useRef, useImperativeHandle, forwardRef } from 'react';
+import React, { useState,useRef, useImperativeHandle, forwardRef } from 'react';
 import Head from 'next/head';
-import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 import dynamic from 'next/dynamic';
 import { Photo } from '../lib/types';
@@ -15,7 +14,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 let keywordsObject = require('../data/keywords.json');
 const keywords = Object.keys(keywordsObject);
-let selectedKeywords: string | any[] = []
+let selectedKeywords: string [] = []
 
 function CheckboxesTags() {
   return (
@@ -72,14 +71,14 @@ export default function Home(
   ));
   
   function YearFilter(){
-    const [value, setValue] = React.useState([yearStart, yearEnd]);
-    const handleChange = (event: any, newValue: React.SetStateAction<number[]>) => {
-      setValue(newValue);
+    const [value, setValue] = React.useState< number[]>([yearStart, yearEnd]);
+    const handleChange = (event: Event, value:  any) => {
+      setValue(value);
     };
 
-    function filterFunction(p: { min_year: number; max_year: number; id: any; }){
+    function filterFunction(p: { min_year: number; max_year: number; id: number; }){
        //Used an array to get all the id associated with the chosen keywords 
-      let id_array: any[] = []
+      let id_array: String[] = []
       for(let i = 0; i < selectedKeywords.length; i ++){
         id_array = id_array.concat(keywordsObject[selectedKeywords[i]])
 
@@ -91,7 +90,7 @@ export default function Home(
       //We filter those photo whose id is included in those ids associated with the chosen keywords
       let included = false
        for (let i = 0; i < id_array.length; i++){
-          if(p.id ==id_array[i] ){
+          if(String(p.id) ==id_array[i] ){
             included = true
           break;
           }
@@ -121,7 +120,6 @@ export default function Home(
             let filteringResult = allPhotos.filter(filterFunction)
             if(filteringResult.length ==0){
                   alert("No photos match the given search criteria")
-                 
             
             }
             setSelectedPhotos(filteringResult);
@@ -141,7 +139,7 @@ export default function Home(
     // as the second argument
     const [innerHtml, setInnerHtml] = useState( <h3>Click on a marker to view the photo at that location</h3>)
      useImperativeHandle(ref, () => ({
-      setPhotoInfo(value) {
+      setPhotoInfo(value: any) {
         
         setInnerHtml(value)
        }
