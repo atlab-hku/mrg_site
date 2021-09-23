@@ -8,15 +8,10 @@ import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
 import  KeywordsSelect  from '../components/Filter/KeywordSelect'; 
 import  {PhotoView}  from '../components/PhotoView'; 
-
-let keywordsObject = require('../data/keywords.json');
+ 
+import  Filter  from '../components/Filter/Filter'; 
 
  
-const keywords = Object.keys(keywordsObject);
-let selectedKeywords: string [] = []
-function changeSelectedKeywords(value: any){
-  selectedKeywords = value
-}
 
 export default function Home({ locatedPhotos,  minYear,  maxYear}: {
       locatedPhotos: Photo[],
@@ -36,67 +31,6 @@ export default function Home({ locatedPhotos,  minYear,  maxYear}: {
     } 
   ));
   
-  function YearFilter(){
-    const [value, setValue] = React.useState< number[]>([yearStart, yearEnd]);
-    const handleChange = (event: Event, value:  any) => {
-      setValue(value);
-    };
-
-    function filterFunction(p: { min_year: number; max_year: number; id: number; }){
-       //Used an array to get all the id associated with the chosen keywords 
-      let id_array: String[] = []
-      for(let i = 0; i < selectedKeywords.length; i ++){
-        id_array = id_array.concat(keywordsObject[selectedKeywords[i]])
-
-      }
-      //We don't have to use keywords to filter if there are no keywords chosen
-      if (id_array.length === 0) {
-          return (p.min_year >= value[0] && p.max_year <= value[1])
-      }
-      //We filter those photo whose id is included in those ids associated with the chosen keywords
-      let included = false
-       for (let i = 0; i < id_array.length; i++){
-          if(String(p.id) ==id_array[i] ){
-            included = true
-          break;
-          }
-          
-       }
-       
-       return (p.min_year >= value[0] && p.max_year <= value[1]) && included == true
-    }
-    return (
-      <div className={styles.controls}>
-        <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
-          <div> Min: {minYear} </div>
-            <Slider
-              sx={{
-                width: 850,
-                color: 'success.main',
-              }}    
-              min= {minYear}
-              max= {maxYear}
-              getAriaLabel={() => 'Years range'}
-              value={value}
-              onChange={handleChange}
-              valueLabelDisplay="on"
-            />
-          <div> Max: {maxYear} </div>
-          <button onClick={() => {
-            let filteringResult = allPhotos.filter(filterFunction)
-            if(filteringResult.length ==0){
-                  alert("No photos match the given search criteria")
-            
-            }
-            setSelectedPhotos(filteringResult);
-            setYearStart(value[0]);
-            setYearEnd(value[1]);
-          }}>Filter</button>
-        </Stack>
-        
-    </div>
-    )
-  }
  
   
   const photoViewRef = useRef();
@@ -115,8 +49,9 @@ export default function Home({ locatedPhotos,  minYear,  maxYear}: {
         <p>
           The photographs below were taken by photographer John Margolies between {minYear} and {maxYear}
         </p>
-       <YearFilter></YearFilter>
- <KeywordsSelect  keywords={keywords} changeSelectedKeywords={changeSelectedKeywords}></KeywordsSelect>
+       
+       <Filter  setYearEnd={setYearEnd }setYearStart={setYearStart} setSelectedPhotos={setSelectedPhotos} allPhotos={allPhotos} maxYear={maxYear} minYear={minYear} yearEnd={yearEnd} yearStart={yearStart} ></Filter>
+ 
 
       <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
       <Map  photoViewRef={photoViewRef} photos={selectedPhotos} />
