@@ -11,5 +11,6 @@ export interface Photo {
     max_year: number
 }
 
-
-
+export interface MarkerController{
+    changeLastMarkerColorToDefault: Function
+}
