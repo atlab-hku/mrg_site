@@ -7,9 +7,9 @@ import { IMG_URL_BASE } from '../../lib/util';
 
 interface PMProps {
     photo: Photo,
-    photoViewRef: any,
     markerController: MarkerController,
-    photos: Photo[]
+    photos: Photo[],
+    photoViewController: any
 }
 
 function createInfoHtml(photo: Photo){
@@ -52,7 +52,7 @@ function getPhotosWithSameLanLng(photos:  Photo[], photo: Photo): Photo[]{
    return sortedPhotos
 }
  
-const PhotoMarker: FC<PMProps> = ({photo,photoViewRef,markerController,photos }) => {
+const PhotoMarker: FC<PMProps> = ({photo,markerController,photos, photoViewController }) => {
 
     const [color, setColor] = useState('#3388ff')
     const [fillColor, setFillColor] = useState('#3388ff')
@@ -78,7 +78,7 @@ const PhotoMarker: FC<PMProps> = ({photo,photoViewRef,markerController,photos })
                                     size="small" 
                                     variant="outlined" 
                                     onClick={()=>{
-                                       photoViewRef.current.setPhotoInfo(createInfoHtml(p))
+                                        photoViewController.setPhotoInfo(createInfoHtml(p))
     
                                     }}
                                 >
@@ -93,7 +93,7 @@ const PhotoMarker: FC<PMProps> = ({photo,photoViewRef,markerController,photos })
                     setFillOpacity(0.2)
                     markerController.changeLastMarkerColorToDefault();
                     markerController.changeLastMarkerColorToDefault = resetColor
-                    photoViewRef.current.setPhotoInfo(createInfoHtml(photo))
+                    photoViewController.setPhotoInfo(createInfoHtml(photo))
                 },
             }}
         >

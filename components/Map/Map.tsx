@@ -9,27 +9,27 @@ import PhotoMarker from './PhotoMarker';
 
 interface MapProps {
     photos: Photo[],
-    photoViewRef: any
+    photoViewController: any
     
 }
 
-const Map: FC<MapProps> = ({ photos ,photoViewRef }) => {
+const Map: FC<MapProps> = ({ photos , photoViewController }) => {
     const startPosition : LatLngTuple = [37.09024, -95.712891];
     const [markerController, setMarkerController] = useState(Object())
     const [markers, setMarkers] = useState(useMemo(
-
     //Trying to use usestate and useeffect to only compute the values on the inital render. 
+    
         () => photos.map(
                 (p: Photo) => 
                 (<PhotoMarker 
+                    photoViewController={photoViewController}
                     markerController={markerController} 
                     photos={photos}  
-                    photoViewRef={photoViewRef}  
                     key={p.id} 
                     photo={p} />
                 )
             ),
-            [markerController, photoViewRef, photos]
+            [markerController, photoViewController, photos]
         ))
     useEffect(() => {
         markerController.changeLastMarkerColorToDefault = function(){

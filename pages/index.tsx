@@ -7,11 +7,13 @@ import { Photo } from '../lib/types';
 import Stack from '@mui/material/Stack';
 import {PhotoView}  from '../components/PhotoView/PhotoView'; 
 import Filter  from '../components/Filter/Filter'; 
+
 export default function Home({ locatedPhotos,  minYear,  maxYear}: {
       locatedPhotos: Photo[],
       minYear: number,
       maxYear: number
   }){
+
   const [allPhotos, setAllPhotos] = useState(locatedPhotos);
   const [selectedPhotos, setSelectedPhotos] = useState(locatedPhotos)
   const Map = React.memo(dynamic(
@@ -21,10 +23,8 @@ export default function Home({ locatedPhotos,  minYear,  maxYear}: {
       ssr: false  
     } 
   ));
-  
-  //With this photoViewRef, we allow other components to access the function inside PhotoView
-  const photoViewRef = useRef();
- 
+
+  const [photoViewController,setPhotoViewController] = useState(Object())
   return (
     <div className={styles.container}>
       <Head>
@@ -44,8 +44,8 @@ export default function Home({ locatedPhotos,  minYear,  maxYear}: {
               minYear={minYear}>
           </Filter>
           <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
-              <Map  photoViewRef={photoViewRef} photos={selectedPhotos} />
-              <PhotoView ref={photoViewRef}></PhotoView>
+              <Map photoViewController={photoViewController} photos={selectedPhotos} />
+              <PhotoView photoViewController={photoViewController} ></PhotoView>
           </Stack>
       </main>
       <footer className={styles.footer}>
