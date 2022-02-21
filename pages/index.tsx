@@ -8,10 +8,11 @@ import Stack from '@mui/material/Stack';
 import {PhotoView}  from '../components/PhotoView/PhotoView'; 
 import Filter  from '../components/Filter/Filter'; 
 
-export default function Home({ locatedPhotos,  minYear,  maxYear}: {
+export default function Home({ locatedPhotos,  minYear,  maxYear,title}: {
       locatedPhotos: Photo[],
       minYear: number,
-      maxYear: number
+      maxYear: number,
+      title: String 
   }){
 
   const [allPhotos, setAllPhotos] = useState(locatedPhotos);
@@ -34,9 +35,8 @@ export default function Home({ locatedPhotos,  minYear,  maxYear}: {
       </Head>
       <main className={styles.main}>
           <h1>John Margolies Photo Map</h1>
-          <p>
-              The photographs below were taken by photographer John Margolies between {minYear} and {maxYear}
-          </p>  
+          <div dangerouslySetInnerHTML={{ __html: title }}></div>
+
           <Filter  
               setSelectedPhotos={setSelectedPhotos} 
               allPhotos={allPhotos} 
@@ -60,11 +60,29 @@ export async function getStaticProps() {
   const locatedPhotos: Photo[] =  photos.filter((p: Photo) => p.latitude !== null && p.longitude !== null);
   const minYear: number = Math.min(...locatedPhotos.map((p: Photo) => p.min_year));
   const maxYear: number = Math.max(...locatedPhotos.map((p: Photo) => p.max_year));
+  
+  const res = await fetch(process.env.REQUEST_URL!,
+  {
+    headers: {'Authorization': 'Token: ' + process.env.TOKEN}
+  })
+  const data = await res.json();
+  let title  ="";
+   
+  for (let i = 0;i< data.length;i++){
+    if(data[i].title="Intro"){
+      title = (data[i].published);
+      break;
+    }
+  }
+
   return {
     props: {
       locatedPhotos,
       minYear,
       maxYear,
+      title,
     }
   }
 }
+
+ 
