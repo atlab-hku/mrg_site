@@ -12,12 +12,10 @@ export default function Home({
   locatedPhotos,
   minYear,
   maxYear,
-  title,
 }: {
   locatedPhotos: Photo[];
   minYear: number;
   maxYear: number;
-  title: string;
 }) {
   const [allPhotos, setAllPhotos] = useState(locatedPhotos);
   const [selectedPhotos, setSelectedPhotos] = useState(locatedPhotos);
@@ -41,7 +39,22 @@ export default function Home({
       </Head>
       <main className={styles.main}>
         <h1>John Margolies Photo Map</h1>
-        <div dangerouslySetInnerHTML={{__html: title}}></div>
+        <div className="intro">
+          <p>
+            Photographer John Margolies traveled across America between 1970 and
+            2008 taking photographs of roadside attractions. These photographs
+            are available in the public domain via the{" "}
+            <a href="https://www.loc.gov/free-to-use/john-margolies-roadside-america-photograph-archive/">
+              Library of Congress.
+            </a>
+          </p>
+          <p>
+            The map below shows the location of each photograph. Adjust the
+            slider to filter the photos by year. Select some keywords from the
+            dropdown list to show photos with specific words in their title or
+            description. Click the Filter button when ready to refresh the map.
+          </p>
+        </div>
 
         <Filter
           setSelectedPhotos={setSelectedPhotos}
@@ -77,25 +90,11 @@ export async function getStaticProps() {
     ...locatedPhotos.map((p: Photo) => p.max_year)
   );
 
-  const res = await fetch(process.env.REQUEST_URL!, {
-    headers: {Authorization: "Token: " + process.env.TOKEN},
-  });
-  const data = await res.json();
-  let title = "";
-
-  for (let i = 0; i < data.length; i++) {
-    if ((data[i].title = "Intro")) {
-      title = data[i].published;
-      break;
-    }
-  }
-
   return {
     props: {
       locatedPhotos,
       minYear,
       maxYear,
-      title,
     },
   };
 }

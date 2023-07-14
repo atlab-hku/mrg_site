@@ -16,27 +16,38 @@ a {
 }
 
 input[type="range"] {
-    --minRangePercent: 0%;
-    --maxRangePercent: 0%;
-    height: 0.4rem;
+  --minRangePercent: 0%;
+  --maxRangePercent: 0%;
+  height: 0.4rem;
 }
 
 .min_max_slider > input.min {
-    background-image: linear-gradient(
-        to right,
-        silver 0%
-        silver var(--minRangePercent),
-        orange var(--minRangePercent),
-        orange 100%
-    );
+  background-image: linear-gradient(
+    to right,
+    silver 0% silver var(--minRangePercent),
+    orange var(--minRangePercent),
+    orange 100%
+  );
 }
 
 .min_max_slider > input.max {
-    background-image: linear-gradient(
-        to right,
-        orange 0%,
-        orange var(--maxRangePercent),
-        silver var(--maxRangePercent),
-        silver 100%
-    );
+  background-image: linear-gradient(
+    to right,
+    orange 0%,
+    orange var(--maxRangePercent),
+    silver var(--maxRangePercent),
+    silver 100%
+  );
+}
+
+.intro {
+  max-width: 50rem;
+}
+
+.intro a {
+  color: blue;
+}
+
+.intro a:hover {
+  text-decoration: underline;
 }
